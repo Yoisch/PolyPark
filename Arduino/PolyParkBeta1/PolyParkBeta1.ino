@@ -1,21 +1,21 @@
-#include <ArduinoJson.h>
+
 
 //Polypark Beta Arduino Code !!!!
 //BAD UPDATE LATER
 
-
+#include <ArduinoJson.h> // for .h go to https://arduinojson.org/
 #include <SPI.h>
 #include <Ethernet.h>
 
 
 /******************** ETHERNET SETTINGS ********************/
 
-byte mac[] = { 0x90, 0xA2, 0xDA, 0x0D, 0x85, 0xD9 };   //physical mac address
+byte mac[] = { 0x90, 0xA2, 0xDA, 0x0D, 0x85, 0xD9 };   //physical mac address changeable
 byte ip[] = { 192, 168, 0, 112 };                   // ip in lan can change
 byte subnet[] = { 255, 255, 255, 0 };              //subnet mask
 byte gateway[] = { 192, 168, 0, 1 };              // default gateway
 EthernetServer server(80);                       //server port
-const int trigPin = 3;
+const int trigPin = 3; // needs to be low, 11-14 reserved for controller
 const int echoPin = 4;
 long duration;
 int distance;
@@ -64,8 +64,7 @@ array.add("distance"); // push distance to our JSON can change this to spot numb
 array.add(distance); // push values
 array.printTo(Serial); // debug serial print
 array.printTo(client); //raw JSON to server
-    // look for the client
-// send a standard http response heade
+ 
 
 /* 
 This portion is the webpage which will be

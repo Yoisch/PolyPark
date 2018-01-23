@@ -1,3 +1,5 @@
+#include <ArduinoJson.h>
+
 //Polypark Beta Arduino Code !!!!
 //BAD UPDATE LATER
 
@@ -18,7 +20,6 @@ const int echoPin = 4;
 long duration;
 int distance;
 
-
 void setup()
 {
 Ethernet.begin(mac,ip,gateway,subnet);     // initialize Ethernet device
@@ -26,6 +27,8 @@ server.begin();                                // start to listen for clients
 pinMode(trigPin, OUTPUT);
 pinMode(echoPin, INPUT);                            // input pin for switch
 Serial.begin(9600);
+
+
 }
 
 void loop()
@@ -54,6 +57,13 @@ distance = duration*0.034/2;
 // Debug
 Serial.print("Distance: ");
 Serial.println(distance);
+
+StaticJsonBuffer<200> jsonBuffer;
+JsonArray& array = jsonBuffer.createArray(); // Create the JSON do not make global or it will grow like crazy!
+array.add("distance"); // push distance to our JSON can change this to spot number for multiple spots.... 
+array.add(distance); // push values
+array.printTo(Serial); // debug serial print
+array.printTo(client); //raw JSON to server
     // look for the client
 // send a standard http response heade
 

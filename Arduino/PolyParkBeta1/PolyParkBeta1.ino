@@ -1,25 +1,24 @@
 
-
 //Polypark Beta Arduino Code !!!!
 //BAD UPDATE LATER
 
-#include <ArduinoJson.h> // for .h go to https://arduinojson.org/
+
 #include <SPI.h>
 #include <Ethernet.h>
-
+#include <ArduinoJson.h>
 
 /******************** ETHERNET SETTINGS ********************/
 
-byte mac[] = { 0x90, 0xA2, 0xDA, 0x0D, 0x85, 0xD9 };   //physical mac address changeable
+byte mac[] = { 0x90, 0xA2, 0xDA, 0x0D, 0x85, 0xD9 };   //physical mac address
 byte ip[] = { 192, 168, 0, 112 };                   // ip in lan can change
 byte subnet[] = { 255, 255, 255, 0 };              //subnet mask
 byte gateway[] = { 192, 168, 0, 1 };              // default gateway
 EthernetServer server(80);                       //server port
-const int trigPin = 3; // needs to be low, 11-14 reserved for controller
+const int trigPin = 3;
 const int echoPin = 4;
 long duration;
 int distance;
-
+String status;
 void setup()
 {
 Ethernet.begin(mac,ip,gateway,subnet);     // initialize Ethernet device
@@ -27,9 +26,9 @@ server.begin();                                // start to listen for clients
 pinMode(trigPin, OUTPUT);
 pinMode(echoPin, INPUT);                            // input pin for switch
 Serial.begin(9600);
-
-
 }
+
+
 
 void loop()
 {
@@ -45,70 +44,54 @@ client.println();
 
 digitalWrite(trigPin, LOW);
 delayMicroseconds(2);
+
+
 // Sets the trigPin on HIGH state for 10 micro seconds
 digitalWrite(trigPin, HIGH);
 delayMicroseconds(10);
 digitalWrite(trigPin, LOW);
+
+
 // Reads the echoPin, returns the sound wave travel time in microseconds
 duration = pulseIn(echoPin, HIGH);
 // Calculating the distance
 distance = duration*0.034/2;
+
+
 // Prints the distance on the Serial Monitor
 // Debug
 Serial.print("Distance: ");
 Serial.println(distance);
 
+if (distance < 50 ){
+  status = "CLOSED";
+}
+else{status= "OPEN";} // data = status, didnt wanna reuse vars
+
+// JSON Creator
 StaticJsonBuffer<200> jsonBuffer;
-JsonArray& array = jsonBuffer.createArray(); // Create the JSON do not make global or it will grow like crazy!
-array.add("distance"); // push distance to our JSON can change this to spot number for multiple spots.... 
-array.add(distance); // push values
-array.printTo(Serial); // debug serial print
-array.printTo(client); //raw JSON to server
- 
+JsonObject& root = jsonBuffer.createObject();
+JsonArray& array = root.createNestedArray("Spaces");
+JsonObject& object = array.createNestedObject(); //Creates 1 real 3 dummy spots
+object["Space1"] = status;//real spot using status as the JSON
+JsonObject& object2 = array.createNestedObject();
+object2["Dummy1"] = randomnum(); // Just a RNG to determine spots
+JsonObject& object3 = array.createNestedObject();
+object3["Dummy2"] = randomnum();
+JsonObject& object4 = array.createNestedObject();
+object4["Dummy3"] = randomnum();
+root.printTo(client);
 
-/* 
-This portion is the webpage which will be
-sent to client web browser one can use html , javascript
-and another web markup language to make particular layout 
-*/
 
-client.println("<!DOCTYPE html>");      //web page is made using html
-client.println("<html>");
-client.println("<head>");
-client.println("<title>PolyPark Beta</title>");
-client.println("<meta http-equiv=\"refresh\" content=\"1\">");
+client.println("<meta http-equiv=\"refresh\" content=\"10\">"); // Refresh data ever 10 sec can cahnge later if needed.
 
-/*
-The above line is used to refresh the page in every 1 second
-This will be sent to the browser as the following HTML code:
-<meta http-equiv="refresh" content="1">
-content = 1 sec i.e assign time for refresh 
-*/
 
-client.println("</head>");
-client.println("<body>");
-client.println("<h1>PolyPark Test </h1>");
 
-client.print("<h2>Parking Space is:  </2>");
-
-if (distance < 50) // can change, 50 seems good.
-{
-client.println("<h3>full</h3>");
-}
-else
-{
-client.println("<h3>empty</h3>");
+client.stop(); // Stop the connection so it wont keep trying to connect to the server.
 }
 
-client.println("</body>");
-client.println("</html>");
-
-delay(1);         // giving time to receive the data
-
-/*
-The following line is important because it will stop the client
-and look for the new connection in the next iteration i.e
-EthernetClient client = server.available();
-*/
-client.stop();
-}
+String randomnum(){
+ int randomnum = random(1,3);
+  if(randomnum == 2){return "CLOSED";}
+  else{return "OPEN";}
+  }

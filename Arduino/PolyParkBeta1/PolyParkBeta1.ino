@@ -1,7 +1,5 @@
 
 //Polypark Beta Arduino Code !!!!
-//BAD UPDATE LATER
-
 
 #include <SPI.h>
 #include <Ethernet.h>
@@ -16,9 +14,9 @@ byte gateway[] = { 192, 168, 0, 1 };              // default gateway
 EthernetServer server(80);                       //server port
 const int trigPin = 3;
 const int echoPin = 4;
-long duration;
+long duration;// For real spot
 int distance;
-String status;
+String status; // Status of the spot OPEN or CLOSED
 void setup()
 {
 Ethernet.begin(mac,ip,gateway,subnet);     // initialize Ethernet device
@@ -63,10 +61,12 @@ distance = duration*0.034/2;
 Serial.print("Distance: ");
 Serial.println(distance);
 
+//check to export, can change to function if needed  
+  
 if (distance < 50 ){
   status = "CLOSED";
 }
-else{status= "OPEN";} // data = status, didnt wanna reuse vars
+else{status= "OPEN";} 
 
 // JSON Creator
 StaticJsonBuffer<200> jsonBuffer;
@@ -90,7 +90,7 @@ client.println("<meta http-equiv=\"refresh\" content=\"10\">"); // Refresh data 
 client.stop(); // Stop the connection so it wont keep trying to connect to the server.
 }
 
-String randomnum(){
+String randomnum(){ // Dummy creator
  int randomnum = random(1,3);
   if(randomnum == 2){return "CLOSED";}
   else{return "OPEN";}

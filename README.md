@@ -3,7 +3,7 @@ Parking lot sensor build for Project management.
 # Plans
 Step 1 : Build arduino, connect to internet
 
-Step 2 : Send data over internet JSON? Html is ok but no api integration.
+Step 2 : Send data over internet JSON
 
 Step 3 : Pull data from JSON file using HTML and JavaScript
 

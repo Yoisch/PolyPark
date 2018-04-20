@@ -1,16 +1,7 @@
 # PolyPark
-Parking lot sensor build for Project management.
-# Plans
-Step 1 : Build arduino, connect to internet
-
-Step 2 : Send data over internet JSON
-
-Step 3 : Pull data from JSON file using HTML and JavaScript
-
-Step 4 : Make pretty
-
-Step 5 : Finish hardware, 3d print box and add lights
-
-Step 6 : Debug code, make looking amazing
-
-Step 7 : Alexa integrate, additional Features
+Parking lot sensor for Project management.
+# How it works!
+Arduino parses sensor data, then sends it to internet
+Data is in JSON format
+Data then gets parsed in website, and Alexa apps.
+User can see changes in real time!

@@ -91,7 +91,7 @@ self.emit(':ask', "There are currently "+ domath() + " out of 4 spaces open");
 };
 // connects to server and updates the space status
  function getstatus(_callback){
-request('http://70.127.16.147/', function (error, response, body) {
+request('xxxxxxx', function (error, response, body) {
   console.log('error:', error); // Print the error if one occurred
   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
   console.log('body:', body); // Print the HTML for the polypark homepage.

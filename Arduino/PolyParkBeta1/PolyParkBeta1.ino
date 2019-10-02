@@ -12,7 +12,7 @@ byte mac[] = { 0x90, 0xA2, 0xDA, 0x0D, 0x85, 0xD9 };   //physical mac address
 byte ip[] = { 192, 168, 0, 112 };                   // ip in lan can change
 byte subnet[] = { 255, 255, 255, 0 };              //subnet mask
 byte gateway[] = { 192, 168, 0, 1 };              // default gateway
-EthernetServer server(80);                       //server port
+EthernetServer server(8080);                       //server port
 
 /********************* ARDUINO SETTINGS ********************/
 const int trigPin = 3; // For the ultrasonic.
@@ -122,7 +122,7 @@ digitalWrite(ledPinGreen, HIGH);
 void distanceError(){
 
 for (int i=0; i < 3; i++){// We can assume if 3 errors in a row, data is actually correct    
-  if (distance - 1000 > prevDistance){distance = prevDistance;} // Distance is 30 - 1000 prev is 30
+  if (distance - 500 > prevDistance){distance = prevDistance;} // Distance is 30 - 1000 prev is 30
  
 }
   }
